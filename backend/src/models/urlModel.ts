@@ -11,7 +11,7 @@ const createUrl=async(userEmail: string,userId: number, longUrl: string, customS
     }
 
     // Append custom short name to the email (replace '@' to prevent conflicts)
-    const shortCode = `${userEmail.replace("@", "_")}/${customShortName}`;
+    const shortCode = `${userEmail.replace("@", "_")}_${customShortName}`;
 
     // Check if shortCode already exists
     const existingUrl = await prisma.shortURL.findUnique({
@@ -26,7 +26,7 @@ const createUrl=async(userEmail: string,userId: number, longUrl: string, customS
     return await prisma.shortURL.create({
         data: {
             shortCode,   // Unique shortCode (e.g., "asd_gmail.com/xyzform")
-            longUrl,     // Original URL
+            longUrl,     // Original URLhttp://localhost:3000/api/url/anuja_gmail.com/mydobs
             userId: user.id,  // Link to user
             expiresAt    // Optional expiration date
         }

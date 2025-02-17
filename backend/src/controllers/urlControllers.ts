@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { getUrl,getUrls,createUrl,updateUrl,deleteUrl,visitCount } from "../models/urlModel";
+import { getUrl,getUrls,createUrl,updateUrl,deleteUrl,visitCount} from "../models/urlModel";
 
 const geturl=async(req:Request,res:Response)=>{
     const {shortCode}=req.body;
@@ -89,4 +89,23 @@ const visitcount=async(req:Request,res:Response)=>{
     }
 }
 
-export {createurl,geturl,geturls,updateurl,deleteurl,visitcount}
+const redirecttourl = async (req: Request, res: Response) => {
+    const { shortURL } = req.params;
+  console.log("hhhhhhhhhhhhhh")
+    try {
+        const shortUrlEntry = await getUrl(shortURL);
+
+        if (!shortUrlEntry) {
+            return res.status(404).json({ msg: 'Short URL not found' });
+        }
+
+        await visitCount(shortURL);
+
+        return res.redirect(shortUrlEntry.longUrl);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ msg: 'Server error' });
+    }
+};
+
+export {createurl,geturl,geturls,updateurl,deleteurl,visitcount,redirecttourl}
